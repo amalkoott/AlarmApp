@@ -38,9 +38,12 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dagger.hilt.android.AndroidEntryPoint
 import ru.amalkoott.alarmapp.ui.navigation.AppNavigation
 import ru.amalkoott.alarmapp.ui.theme.AlarmAppTheme
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,56 +53,5 @@ class MainActivity : ComponentActivity() {
                 AppNavigation()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    val list = listOf("text 1","text 2","text 3","text 4")
-    val expandedItems = remember { mutableStateListOf<Boolean>().apply { repeat(list.size) { add(false) } } }
-
-    LazyColumn(){
-        itemsIndexed(list){ index, item ->
-            Text(
-                text = item,
-                modifier = modifier.clickable {
-                    expandedItems[index] = !expandedItems[index]
-                }
-            )
-            if (expandedItems[index]){
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .height(100.dp)
-                    .background(Color.White)
-                    .drawBehind {
-                        drawInnerShadow(size, Color.Gray.copy(alpha = 0.2f))
-                    }
-                ){
-
-                    Text(
-                        text = "Details for $item",
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-
-            }
-        }
-    }
-
-}
-fun DrawScope.drawInnerShadow(size: androidx.compose.ui.geometry.Size, color: Color) {
-    drawRect(
-        color = color,
-        size = size.copy(width = size.width, height = size.height),
-        topLeft = androidx.compose.ui.geometry.Offset(0f, 0f)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AlarmAppTheme {
-        Greeting("Android")
     }
 }
