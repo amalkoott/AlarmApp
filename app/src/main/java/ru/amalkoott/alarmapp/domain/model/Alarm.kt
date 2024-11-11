@@ -1,4 +1,4 @@
-package ru.amalkoott.alarmapp.domain.entity
+package ru.amalkoott.alarmapp.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

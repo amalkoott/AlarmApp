@@ -7,4 +7,5 @@ import androidx.compose.runtime.Composable
 fun TimerScreen(){
     Text("Timer")
 
+    // задержать для большей прибавки
 }

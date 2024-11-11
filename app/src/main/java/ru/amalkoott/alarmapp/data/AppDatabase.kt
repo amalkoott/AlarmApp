@@ -2,8 +2,7 @@ package ru.amalkoott.alarmapp.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import ru.amalkoott.alarmapp.domain.entity.Alarm
+import ru.amalkoott.alarmapp.domain.model.Alarm
 
 
 @Database(
