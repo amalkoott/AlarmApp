@@ -1,15 +1,17 @@
 package ru.amalkoott.alarmapp.ui.view
 
-import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import ru.amalkoott.alarmapp.domain.model.StopwatchRecord
+import ru.amalkoott.alarmapp.domain.model.Time
 import ru.amalkoott.alarmapp.domain.usecase.GetRecordsStopwatchUseCase
 import ru.amalkoott.alarmapp.domain.usecase.MarkRecordStopwatchUseCase
 import ru.amalkoott.alarmapp.domain.usecase.StartStopwatchUseCase
@@ -29,7 +31,13 @@ class StopwatchViewModel @Inject constructor(
     private val _records = MutableStateFlow<List<StopwatchRecord>>(emptyList())
     val records: StateFlow<List<StopwatchRecord>> get() = _records
 
-    var time = MutableStateFlow<Long>(0L)
+    var temp_time = MutableStateFlow<Long>(0L)
+    //var time = MutableStateFlow<Time>(Time.ZERO)
+
+    //private val _secondsFlow = MutableStateFlow(0L)
+    //private val _millisecondsFlow = MutableStateFlow(0L)
+    var time = Time()
+
     init {
         viewModelScope.launch {
             getRecordsStopwatchUseCase.expose().collect{ record ->
@@ -41,9 +49,29 @@ class StopwatchViewModel @Inject constructor(
     fun start(){
         viewModelScope.launch {
             _isStarted.value = true
+
+            val stopwatch = startStopwatchUseCase.expose()
+            time = stopwatch
+            /*
+            launch {
+                stopwatch.seconds.collect{
+                   // _secondsFlow.value = it
+                    time.collectSeconds(it)
+                }
+            }
+            launch {
+                stopwatch.milliseconds.collect{
+                   // _millisecondsFlow.value = it
+                    time.collectMilliseconds(it)
+                }
+            }
+            */
+            /*
             startStopwatchUseCase.expose().collect{
+                //temp_time.value = it
                 time.value = it
             }
+            */
         }
     }
 

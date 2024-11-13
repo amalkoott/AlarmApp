@@ -1,8 +1,9 @@
 package ru.amalkoott.alarmapp.ui.screen
 
-import android.graphics.drawable.Icon
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,12 +33,16 @@ import ru.amalkoott.alarmapp.ui.view.StopwatchViewModel
     - отмечать время
      */
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun StopwatchScreen(
     viewModel: StopwatchViewModel = hiltViewModel()
 ){
     val isStarted by viewModel.isStarted.collectAsState()
-    val time by viewModel.time.collectAsState()
+    //val time by viewModel.temp_time.collectAsState()
+
+    val seconds by viewModel.time.getSeconds().collectAsState()
+    val milliseconds by viewModel.time.getMilliseconds().collectAsState()
     val records by viewModel.records.collectAsState()
 
     Column(
@@ -54,7 +58,10 @@ fun StopwatchScreen(
             Text("Таймер остановлен!")
 
         }
-        Text("TIME: ${time}")
+        Row(){
+            Text("sec: ${seconds}")
+            Text("mls: ${milliseconds}")
+        }
         StopwatchDisplay()
         StopwatchButton(
             icon = { if (isStarted) Icon(

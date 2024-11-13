@@ -1,11 +1,13 @@
 package ru.amalkoott.alarmapp.domain.supplier
 
 import kotlinx.coroutines.flow.Flow
-import ru.amalkoott.alarmapp.domain.model.StopwatchRecord
 
 interface StopwatchSupplier {
-    fun getTime(): Flow<Long>
+    fun supply()
+    fun getSeconds(): Flow<Long>//Flow<Long>
+    fun getMilliseconds(): Flow<Int>//Flow<Long>
     fun stopTime()
     fun resetTime()
-    fun getLapMark(): Long//StopwatchRecord
+    fun getCurrentSeconds(): Long//StopwatchRecord
+    fun getCurrentMilliseconds(): Int//StopwatchRecord
 }
