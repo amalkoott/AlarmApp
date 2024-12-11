@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.util.Log
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.amalkoott.alarmapp.data.service.StopwatchService
+import ru.amalkoott.alarmapp.domain.model.TimeTemplate
 import ru.amalkoott.alarmapp.domain.supplier.StopwatchSupplier
 import javax.inject.Inject
 
@@ -17,65 +19,60 @@ import javax.inject.Inject
 class StopwatchSupplierImpl @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
 ): StopwatchSupplier {
-    private var intent: Intent = Intent(applicationContext, StopwatchService::class.java)
+    private var intentService: Intent = Intent(applicationContext, StopwatchService::class.java)
+    private lateinit var service: StopwatchService
+    private var isBound = false
+    private val seconds: MutableStateFlow<Long> = StopwatchService._seconds
+    private val milliseconds: MutableStateFlow<Long> = StopwatchService._milliseconds
 
-    var serviceConnection: ServiceConnection
-    init {
-        serviceConnection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                val binder = service as StopwatchService.StopwatchBinder
-                this@StopwatchSupplierImpl.service = binder.getService()
-                isBound = true
-            }
+    private val serviceConnection = object : ServiceConnection {
 
-            override fun onServiceDisconnected(name: ComponentName?) {
-                isBound = false
-            }
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as StopwatchService.StopwatchBinder
+            this@StopwatchSupplierImpl.service = binder.getService()
+            this@StopwatchSupplierImpl.isBound = true
         }
-        applicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-    }
 
-    override fun supply() {
-        ContextCompat.startForegroundService(applicationContext, intent)
-    }
-    override fun getSeconds():Flow<Long>{
-        return if (isBound) service?.getSecondsFlow() ?: flow { 0 } else flow { 0 }
-    }
-    override fun getMilliseconds():Flow<Int>{
-        return if (isBound) service?.getMillisecondsFlow() ?: flow { 0 } else flow { 0 }
-    }
-
-    override fun stopTime() {
-        if (isBound) {
-            applicationContext.unbindService(serviceConnection)
+        override fun onServiceDisconnected(arg0: ComponentName) {
             isBound = false
         }
-        applicationContext.stopService(intent)
     }
 
-    override fun resetTime() {
-        if (isBound) { TODO("reset stopwatch") }
+
+
+    override fun supply(): Pair<Flow<Long>,Flow<Long>> {
+        applicationContext.bindService(intentService,serviceConnection,Context.BIND_AUTO_CREATE)
+        Log.d("stopwatch","supply start()")
+
+        ContextCompat.startForegroundService(applicationContext, intentService)
+
+        return Pair(seconds,milliseconds)
     }
 
-    override fun getCurrentSeconds(): Long{
-        var seconds: Long = 0
-        if (isBound) {
-            seconds = service?.getSecondsValue() ?: 0
-        } else{
-            throw IllegalArgumentException()
+    override fun stopSupply() {
+        if(isBound){
+            service.stopStopwatch()
         }
-        return seconds
-    }
-    override fun getCurrentMilliseconds(): Int{
-        var milliseconds: Int = 0
-        if (isBound) {
-            milliseconds = service?.getMillisecondsValue() ?: 0
-        } else{
-            throw IllegalArgumentException()
-        }
-        return milliseconds
+
+        Log.d("stopwatch","supply stop()")
     }
 
-    private var service: StopwatchService? = null
-    private var isBound = false
+    override fun restartSupply() {
+        if(isBound){
+            service.restartStopwatch()
+        }
+        Log.d("stopwatch","supply restart()")
+    }
+
+    override fun cancelSupply() {
+        applicationContext.unbindService(serviceConnection)
+        Log.d("stopwatch","supply cancel()")
+
+        applicationContext.stopService(intentService)
+    }
+
+    override fun getCurrentTime(): TimeTemplate {
+        return TimeTemplate(_seconds = seconds.value, _milliseconds = milliseconds.value)
+    }
+
 }

@@ -41,8 +41,8 @@ fun StopwatchScreen(
     val isStarted by viewModel.isStarted.collectAsState()
     //val time by viewModel.temp_time.collectAsState()
 
-    val seconds by viewModel.time.getSeconds().collectAsState()
-    val milliseconds by viewModel.time.getMilliseconds().collectAsState()
+    val seconds by viewModel.chronoTime.getSeconds().collectAsState()
+    val milliseconds by viewModel.chronoTime.getMilliseconds().collectAsState()
     val records by viewModel.records.collectAsState()
 
     Column(
@@ -73,18 +73,22 @@ fun StopwatchScreen(
             },
             onAction = { if (isStarted) viewModel.stop() else viewModel.start() }
         )
-
+        Button(
+            onClick = { viewModel.reset() }
+        ) {
+            Text(text = "CANCEL!")
+        }
         Button(
             onClick = { viewModel.record() }
         ) {
             Text(text = "MARK!")
         }
         LazyColumn(
-            modifier = Modifier.fillMaxWidth()//.weight(1f)
+            modifier = Modifier.fillMaxWidth()
         ) {
             items(records){ record ->
                 Text(
-                    text = record.getTotalTime().toString(),
+                    text = record.toString(),
                     modifier = Modifier
                 )
             }

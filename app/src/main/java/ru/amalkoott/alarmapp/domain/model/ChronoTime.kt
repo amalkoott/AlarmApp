@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class Time(
+class ChronoTime(
     private var seconds: Flow<Long> = MutableStateFlow(0L),
-    private var milliseconds: Flow<Int> = MutableStateFlow(0),
+    private var milliseconds: Flow<Long> = MutableStateFlow(0L),
 ) {
     private val _secondsFlow = MutableStateFlow(0L)
-    private val _millisecondsFlow = MutableStateFlow(0)
+    private val _millisecondsFlow = MutableStateFlow(0L)
     init {
         collectSeconds()
         collectMilliseconds()
@@ -38,8 +38,8 @@ class Time(
         val seconds: StateFlow<Long> = _secondsFlow
         return seconds
     }
-    fun getMilliseconds():StateFlow<Int>{
-        val milliseconds: StateFlow<Int> = _millisecondsFlow
+    fun getMilliseconds():StateFlow<Long>{
+        val milliseconds: StateFlow<Long> = _millisecondsFlow
         return milliseconds
     }
 }

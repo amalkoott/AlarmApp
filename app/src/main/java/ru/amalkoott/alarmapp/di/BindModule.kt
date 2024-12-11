@@ -23,9 +23,12 @@ interface BindModule {
     @Binds
     fun bindStopwatchRepository(repo: StopwatchRepositoryImpl) : StopwatchRepository
 
+
     @Singleton
     @Binds
     fun bindStopwatchSupplier(supplier: StopwatchSupplierImpl) : StopwatchSupplier
+
+
     /*
     @Singleton
     @Binds

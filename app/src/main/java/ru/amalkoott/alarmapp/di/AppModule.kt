@@ -9,7 +9,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.amalkoott.alarmapp.data.AppDatabase
 import ru.amalkoott.alarmapp.data.Dao
+import ru.amalkoott.alarmapp.data.supplier.StopwatchSupplierImpl
+import ru.amalkoott.alarmapp.domain.supplier.StopwatchSupplier
 import javax.inject.Singleton
+import kotlin.contracts.contract
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,7 +34,13 @@ object AppModule {
     fun provideAppDao(db: AppDatabase): Dao {
         return db.getDao()
     }
-/*
+
+    /*
+    @Provides
+    fun provideStopwatchSupplier(@ApplicationContext context: Context): StopwatchSupplier{
+        return StopwatchSupplierImpl(context)
+    }
+
     @Provides
     fun provideStopwatchService(): StopwatchService {
         return StopwatchServiceImpl()

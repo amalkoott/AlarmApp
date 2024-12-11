@@ -24,8 +24,6 @@ object NotificationHelper{
             vibrationPattern = longArrayOf(0, 200, 100, 200)
         }
         return channel
-       // val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        //notificationManager.createNotificationChannel(channel)
     }
 
     fun getNotification(context: Context, channelName: String, value: Any = "", number: Int) : Notification {
@@ -55,12 +53,35 @@ object NotificationHelper{
             .setOngoing(true) // an ongoing notification means can't dismiss by the user.
             .setOnlyAlertOnce(true)
             .build()
-        /*
-        STOPWATCH_SERVICE_NOTIFICATION_ID = notification.number
-        notificationManager.notify(
-            STOPWATCH_SERVICE_NOTIFICATION_ID, notification
-        )
-        */
+        return notification
+    }
+    fun getNotification(context: Context, channelName: String, seconds: Any = "", milliseconds: Any ="", number: Int) : Notification {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+
+            val notification = NotificationCompat.Builder(context, channelName)
+                .setNumber(number)
+                .setContentText("Set permissions")
+                .setContentTitle("please")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setOngoing(true) // an ongoing notification means can't dismiss by the user.
+                .setOnlyAlertOnce(true)
+                .build()
+
+            return notification
+        }
+        val notification = NotificationCompat.Builder(context, channelName)
+            .setContentText("Update: $seconds $milliseconds")
+            .setContentTitle("Title")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setOngoing(true) // an ongoing notification means can't dismiss by the user.
+            .setOnlyAlertOnce(true)
+            .build()
         return notification
     }
 }
