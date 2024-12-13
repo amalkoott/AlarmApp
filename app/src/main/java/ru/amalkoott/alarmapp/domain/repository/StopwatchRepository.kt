@@ -6,9 +6,9 @@ import ru.amalkoott.alarmapp.domain.model.ChronoTime
 
 interface StopwatchRepository {
     fun start(): ChronoTime
-    fun stop()
-    fun reset()
+    fun pause()
     fun cancel()
+    fun resume()
     fun getRecords(): Flow<List<StopwatchRecord>>
     fun markRecord(): StopwatchRecord
 }

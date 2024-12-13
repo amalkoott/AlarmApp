@@ -38,8 +38,6 @@ class StopwatchSupplierImpl @Inject constructor(
         }
     }
 
-
-
     override fun supply(): Pair<Flow<Long>,Flow<Long>> {
         applicationContext.bindService(intentService,serviceConnection,Context.BIND_AUTO_CREATE)
         Log.d("stopwatch","supply start()")

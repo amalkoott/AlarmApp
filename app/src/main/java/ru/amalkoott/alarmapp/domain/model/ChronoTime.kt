@@ -11,6 +11,7 @@ class ChronoTime(
     private var seconds: Flow<Long> = MutableStateFlow(0L),
     private var milliseconds: Flow<Long> = MutableStateFlow(0L),
 ) {
+
     private val _secondsFlow = MutableStateFlow(0L)
     private val _millisecondsFlow = MutableStateFlow(0L)
     init {

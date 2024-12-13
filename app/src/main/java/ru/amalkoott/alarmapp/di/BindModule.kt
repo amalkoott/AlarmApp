@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.amalkoott.alarmapp.data.repository.AppRepositoryImpl
 import ru.amalkoott.alarmapp.data.repository.StopwatchRepositoryImpl
+import ru.amalkoott.alarmapp.data.repository.TimerRepositoryImpl
 import ru.amalkoott.alarmapp.data.supplier.StopwatchSupplierImpl
 import ru.amalkoott.alarmapp.domain.repository.AppRepository
 import ru.amalkoott.alarmapp.domain.repository.StopwatchRepository
+import ru.amalkoott.alarmapp.domain.repository.TimerRepository
 import ru.amalkoott.alarmapp.domain.supplier.StopwatchSupplier
 import javax.inject.Singleton
 
@@ -28,6 +30,10 @@ interface BindModule {
     @Binds
     fun bindStopwatchSupplier(supplier: StopwatchSupplierImpl) : StopwatchSupplier
 
+
+    @Singleton
+    @Binds
+    fun bindTimerRepository(repo: TimerRepositoryImpl) : TimerRepository
 
     /*
     @Singleton

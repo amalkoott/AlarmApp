@@ -7,6 +7,6 @@ class StopStopwatchUseCase @Inject constructor(
     private val stopwatchRepository: StopwatchRepository
 ) {
     fun expose(){
-        stopwatchRepository.stop()
+        stopwatchRepository.pause()
     }
 }

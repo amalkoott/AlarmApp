@@ -33,6 +33,11 @@
             android:foregroundServiceType="dataSync|mediaPlayback"
             android:exported="false">
         </service>
+        <service
+            android:name=".data.service.TimerService"
+            android:foregroundServiceType="dataSync|mediaPlayback"
+            android:exported="false">
+        </service>
         <!--
         <receiver
             android:name=".data.broadcast.StopwatchBroadcast"

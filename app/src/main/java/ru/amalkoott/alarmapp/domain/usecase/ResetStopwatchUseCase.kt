@@ -7,6 +7,6 @@ class ResetStopwatchUseCase @Inject constructor(
     private val stopwatchRepository: StopwatchRepository
 ) {
     fun expose(){
-        stopwatchRepository.reset()
+        stopwatchRepository.resume()
     }
 }

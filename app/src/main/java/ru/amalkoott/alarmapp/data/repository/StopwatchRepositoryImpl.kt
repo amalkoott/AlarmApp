@@ -31,12 +31,12 @@ class StopwatchRepositoryImpl @Inject constructor(
         return chronoTime as ChronoTime
     }
 
-    override fun stop() {
+    override fun pause() {
         stopwatchSupplier.stopSupply()
         Log.d("SUPPLIER","repository stop()")
 
     }
-    override fun reset() {
+    override fun resume() {
         chronoTime = null
         _records.value = emptyList()
 
