@@ -33,7 +33,14 @@ fun AppBottomBar(navController: NavController){
                 selected = currentDestination?.hierarchy?.any { it.hasRoute(screen.route::class) } == true,
                 onClick = {
                     navController.navigate(screen.route){
-                        // что-то с попапом и прочим
+                        //todo ("почекать еще, криво работает")
+                        popUpTo(navController.graph.startDestinationId) {
+                            // Убираем все экраны до начального
+                            inclusive = true
+                        }
+
+                        // Не добавляем новый экран в стек, если он уже есть
+                        launchSingleTop = false
                     }
                 }
             )

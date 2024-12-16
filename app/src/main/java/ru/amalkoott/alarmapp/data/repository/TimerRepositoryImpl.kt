@@ -44,7 +44,9 @@ class TimerRepositoryImpl @Inject constructor(
         applicationContext.startService(intent)
 
 
+
         return TimerService.current
+        TODO ("change to foreground service")
     }
 
     override fun pause() {

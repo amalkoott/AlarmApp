@@ -8,4 +8,8 @@ data class Alarm(
     @PrimaryKey
     val id: Long,
     val name: String
-)
+){
+    companion object{
+        val EMPTY_ALARM = Alarm(0L,"empty_alarm")
+    }
+}

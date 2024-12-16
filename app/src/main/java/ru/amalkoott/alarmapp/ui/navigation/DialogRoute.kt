@@ -1,6 +1,7 @@
 package ru.amalkoott.alarmapp.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -12,6 +13,16 @@ sealed class DialogRoute(
     val route: String,
     val icon: ImageVector
 ) {
+    object Item : DialogRoute(
+        name = "item",
+        route = "Item",
+        icon = Icons.Filled.AccountBox
+    )
+    object Main : DialogRoute(
+        name = "Main",
+        route = "Main",
+        icon = Icons.Filled.AccountBox
+    )
     object Time : BottomRoute(
         name = "Time",
         route = "Time",
