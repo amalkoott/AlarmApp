@@ -23,9 +23,7 @@ fun TimerScreen(
     var test by remember { mutableLongStateOf(10L) }
     val timerValue by viewModel.timerValue.collectAsState()
     Text("Timer")
-
-    // задержать для большей прибавки
-
+    
     Column(
         modifier = Modifier
             .padding(32.dp)
@@ -73,6 +71,25 @@ fun TimerScreen(
         ){
             Text(
                 text = "FINISH"
+            )
+        }
+
+        Button(
+            onClick = {
+                viewModel.addOneMinute()
+            }
+        ){
+            Text(
+                text = "1 min"
+            )
+        }
+        Button(
+            onClick = {
+                viewModel.addTenMinutes()
+            }
+        ){
+            Text(
+                text = "10 min"
             )
         }
     }

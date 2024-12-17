@@ -7,4 +7,5 @@ interface TimerRepository {
     fun pause()
     fun resume()
     fun finish()
+    fun add(value: Long)
 }

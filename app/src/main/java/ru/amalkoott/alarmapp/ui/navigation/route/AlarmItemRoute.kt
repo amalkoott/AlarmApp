@@ -1,4 +1,4 @@
-package ru.amalkoott.alarmapp.ui.navigation
+package ru.amalkoott.alarmapp.ui.navigation.route
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -7,35 +7,29 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
-
-sealed class DialogRoute(
+sealed class AlarmItemRoute(
     val name: String,
     val route: String,
     val icon: ImageVector
 ) {
-    object Item : DialogRoute(
-        name = "item",
-        route = "Item",
-        icon = Icons.Filled.AccountBox
-    )
-    object Main : DialogRoute(
+    object Main : AlarmItemRoute(
         name = "Main",
         route = "Main",
         icon = Icons.Filled.AccountBox
     )
-    object Time : BottomRoute(
+    object Time : AppRoute(
         name = "Time",
         route = "Time",
         icon = Icons.Filled.Star
     )
 
-    object Date : BottomRoute(
+    object Date : AppRoute(
         name = "Date",
         route = "Date",
         icon = Icons.Filled.Search
     )
 
-    object Melody : BottomRoute(
+    object Melody : AppRoute(
         name = "Melody",
         route = "Melody",
         icon = Icons.Filled.Email

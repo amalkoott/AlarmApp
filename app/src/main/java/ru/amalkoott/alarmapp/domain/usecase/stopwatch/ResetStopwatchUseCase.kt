@@ -1,12 +1,12 @@
-package ru.amalkoott.alarmapp.domain.usecase
+package ru.amalkoott.alarmapp.domain.usecase.stopwatch
 
 import ru.amalkoott.alarmapp.domain.repository.StopwatchRepository
 import javax.inject.Inject
 
-class MarkRecordStopwatchUseCase @Inject constructor(
+class ResetStopwatchUseCase @Inject constructor(
     private val stopwatchRepository: StopwatchRepository
 ) {
-    fun expose() {
-        stopwatchRepository.markRecord()
+    fun expose(){
+        stopwatchRepository.resume()
     }
 }

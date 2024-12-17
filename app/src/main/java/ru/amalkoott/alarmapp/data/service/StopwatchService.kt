@@ -11,8 +11,11 @@ import android.os.IBinder
 import androidx.core.app.ServiceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.amalkoott.alarmapp.utils.NotificationHelper.getNotification
-import ru.amalkoott.alarmapp.utils.NotificationHelper.getNotificationChannel
+import ru.amalkoott.alarmapp.domain.ForegroundCompanion
+import ru.amalkoott.alarmapp.domain.ForegroundService
+import ru.amalkoott.alarmapp.utils.ForegroundServiceTools
+import ru.amalkoott.alarmapp.utils.ForegroundServiceTools.createNotificationChannel
+import ru.amalkoott.alarmapp.utils.ForegroundServiceTools.notify
 import java.util.Timer
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
@@ -20,15 +23,21 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 @AndroidEntryPoint
-class StopwatchService : Service(){
-    companion object {
-        private const val STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_ID = "STOPWATCH_CHANNEL"
-        private const val STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_NAME = "STOPWATCH"
-        private const val STOPWATCH_SERVICE_NOTIFICATION_ID = 1
+class StopwatchService : Service(), ForegroundService {
+    companion object : ForegroundCompanion{
+        val seconds = MutableStateFlow(0L)
+        val milliseconds = MutableStateFlow(0L)
 
-        val _seconds = MutableStateFlow(0L)
-        val _milliseconds = MutableStateFlow(0L)
+        override val CHANNEL_ID: String
+            get() = "STOPWATCH_CHANNEL"
+
+        override val CHANNEL_NAME: String
+            get() = "STOPWATCH"
+
+        override val NOTIFICATION_ID: Int
+            get() = 1
     }
+
     private val notificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
@@ -44,13 +53,7 @@ class StopwatchService : Service(){
 
     override fun onCreate() {
         super.onCreate()
-
-        val notificationChannel = getNotificationChannel(
-            id = STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_ID,
-            name = STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_NAME
-        )
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(notificationChannel)
+        notificationManager.createNotificationChannel(Companion)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -61,20 +64,15 @@ class StopwatchService : Service(){
     }
 
     private fun startForegroundService() {
-        val notification = getNotification(
-            applicationContext,
-            STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_ID,
-            _seconds.value,
-            STOPWATCH_SERVICE_NOTIFICATION_ID
-        )
-
-        notificationManager.notify(STOPWATCH_SERVICE_NOTIFICATION_ID, notification)
+        //val notification = notificationManager.notify(Companion,applicationContext, _seconds.value)
 
         startStopwatch{ seconds ->
             updateTime(seconds)
         }
 
-        ServiceCompat.startForeground(this, STOPWATCH_SERVICE_NOTIFICATION_ID, notification,
+        val notification = ForegroundServiceTools.getNotification(Companion, applicationContext, seconds.value)
+
+        ServiceCompat.startForeground(this, NOTIFICATION_ID, notification,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {
@@ -90,31 +88,22 @@ class StopwatchService : Service(){
         timer = fixedRateTimer(initialDelay = 0, period = 10L) {
             ms_duration = ms_duration.plus(1.milliseconds)
             updateTimeUnits()
-            onTick(_seconds.value)
+            onTick(seconds.value)
         }
     }
 
     private fun updateTimeUnits() {
         ms_duration.toComponents { _, _, _, millis, nanos ->
-            val milliseconds = (nanos / 1_000_000) % 100
-            if(milliseconds == 99){
-                _seconds.value += 1
+            val _milliseconds = (nanos / 1_000_000) % 100
+            if(_milliseconds == 99){
+                seconds.value += 1
             }
-            _milliseconds.value = milliseconds.toLong()
+            milliseconds.value = _milliseconds.toLong()
         }
     }
 
     private fun updateTime(seconds: Long) {
-        val notification = getNotification(
-            context = this,
-            channelName = STOPWATCH_SERVICE_NOTIFICATION_CHANNEL_ID,
-            seconds = seconds,
-            number = STOPWATCH_SERVICE_NOTIFICATION_ID
-        )
-
-        notificationManager.notify(
-            STOPWATCH_SERVICE_NOTIFICATION_ID, notification
-        )
+        notificationManager.notify(Companion,this,seconds)
     }
 
     override fun stopService(name: Intent?): Boolean {
@@ -126,7 +115,7 @@ class StopwatchService : Service(){
     }
 
     override fun onDestroy() {
-        notificationManager.cancel(STOPWATCH_SERVICE_NOTIFICATION_ID)
+        notificationManager.cancel(NOTIFICATION_ID)
         stopStopwatch()
         resetStopwatch()
 
@@ -137,8 +126,8 @@ class StopwatchService : Service(){
 
     }
     private fun resetStopwatch(){
-        _seconds.value =  0L
-        _milliseconds.value = 0L
+        seconds.value =  0L
+        milliseconds.value = 0L
     }
 
     fun restartStopwatch(){

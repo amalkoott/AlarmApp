@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.amalkoott.alarmapp.domain.model.Alarm
-import ru.amalkoott.alarmapp.ui.navigation.AlarmItemNavigation
-import ru.amalkoott.alarmapp.ui.navigation.DialogRoute
+import ru.amalkoott.alarmapp.ui.navigation.route.AlarmItemRoute
 import ru.amalkoott.alarmapp.ui.view.AlarmViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -31,7 +30,7 @@ fun AlarmScreen(
     viewModel: AlarmViewModel = hiltViewModel()
 ){
 
-    val onAddClick: () -> Unit = { navController.navigate(DialogRoute.Item.name) }
+    val onAddClick: () -> Unit = { navController.navigate(AlarmItemRoute.Main.name) }
     val alarms by viewModel.alarms.collectAsState()
     val selectedAlarm by remember { mutableStateOf(viewModel.selectedAlarm) }
 

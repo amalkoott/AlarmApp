@@ -12,39 +12,39 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.amalkoott.alarmapp.ui.navigation.BottomRoute
+import ru.amalkoott.alarmapp.ui.navigation.route.AppRoute
 
 @Composable
 fun AppBottomBar(navController: NavController){
     val routes = listOf(
-        BottomRoute.Alarm,
-        BottomRoute.Stopwatch,
-        BottomRoute.Timer
+        AppRoute.Alarm,
+        AppRoute.Stopwatch,
+        AppRoute.Timer
     )
 
-    BottomNavigation() {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-        routes.forEach{ screen ->
-            BottomNavigationItem(
-                icon = { Icon(screen.icon, contentDescription = screen.name) },
-                label = { Text(text = screen.name) },
-                selected = currentDestination?.hierarchy?.any { it.hasRoute(screen.route::class) } == true,
-                onClick = {
-                    navController.navigate(screen.route){
-                        //todo ("почекать еще, криво работает")
-                        popUpTo(navController.graph.startDestinationId) {
-                            // Убираем все экраны до начального
-                            inclusive = true
+    val bottomBarDestination = routes.any { it.route == currentDestination?.route }
+
+    if(bottomBarDestination){
+        BottomNavigation{
+            routes.forEach{ screen ->
+                BottomNavigationItem(
+                    icon = { Icon(screen.icon, contentDescription = screen.name) },
+                    label = { Text(text = screen.name) },
+                    selected = currentDestination?.hierarchy?.any { it.hasRoute(screen.route::class) } == true,
+                    onClick = {
+                        navController.navigate(screen.route){
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = false
                         }
-
-                        // Не добавляем новый экран в стек, если он уже есть
-                        launchSingleTop = false
                     }
-                }
-            )
+                )
+            }
         }
     }
-
 }

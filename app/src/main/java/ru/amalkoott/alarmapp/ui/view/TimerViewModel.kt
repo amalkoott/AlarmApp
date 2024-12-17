@@ -6,36 +6,44 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.amalkoott.alarmapp.domain.usecase.ResetTimerUseCase
-import ru.amalkoott.alarmapp.domain.usecase.StartTimerUseCase
-import ru.amalkoott.alarmapp.domain.usecase.PauseTimerUseCase
-import ru.amalkoott.alarmapp.domain.usecase.ResumeTimerUseCase
+import ru.amalkoott.alarmapp.domain.usecase.timer.AddTimeUseCase
+import ru.amalkoott.alarmapp.domain.usecase.timer.FinishUseCase
+import ru.amalkoott.alarmapp.domain.usecase.timer.StartUseCase
+import ru.amalkoott.alarmapp.domain.usecase.timer.PauseUseCase
+import ru.amalkoott.alarmapp.domain.usecase.timer.ResumeUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val startTimerUseCase: StartTimerUseCase,
-    private val pauseTimerUseCase: PauseTimerUseCase,
-    private val resumeTimerUseCase: ResumeTimerUseCase,
-    private val finishTimerUseCase: ResetTimerUseCase
+    private val startUseCase: StartUseCase,
+    private val pauseUseCase: PauseUseCase,
+    private val resumeUseCase: ResumeUseCase,
+    private val finishUseCase: FinishUseCase,
+    private val addTimeUseCase: AddTimeUseCase
 ): ViewModel() {
     private var _timerValue = MutableStateFlow(0L)
     val timerValue: StateFlow<Long> get()  = _timerValue
 
     fun start(point: Long){
         viewModelScope.launch {
-            startTimerUseCase.expose(point).collect{
+            startUseCase.expose(point).collect{
                 _timerValue.value = it
             }
         }
     }
     fun pause(){
-        pauseTimerUseCase.expose()
+        pauseUseCase.expose()
     }
     fun resume(){
-        resumeTimerUseCase.expose()
+        resumeUseCase.expose()
     }
     fun finish(){
-        finishTimerUseCase.expose()
+        finishUseCase.expose()
+    }
+    fun addOneMinute(){
+        addTimeUseCase.expose(1L)
+    }
+    fun addTenMinutes(){
+        addTimeUseCase.expose(10L)
     }
 }

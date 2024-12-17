@@ -1,4 +1,4 @@
-package ru.amalkoott.alarmapp.domain.usecase
+package ru.amalkoott.alarmapp.domain.usecase.stopwatch
 
 import ru.amalkoott.alarmapp.domain.model.ChronoTime
 import ru.amalkoott.alarmapp.domain.repository.StopwatchRepository
@@ -10,7 +10,7 @@ class StartStopwatchUseCase @Inject constructor(
 //    fun expose(): Flow<Time>{//Flow<Long> {
 //        return stopwatchRepository.start()
 //    }
-    fun expose(): ChronoTime{//Flow<Long> {
+    fun expose(): ChronoTime {//Flow<Long> {
         return stopwatchRepository.start()
     }
 }

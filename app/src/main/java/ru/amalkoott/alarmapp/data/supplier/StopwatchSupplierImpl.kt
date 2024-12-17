@@ -22,8 +22,8 @@ class StopwatchSupplierImpl @Inject constructor(
     private var intentService: Intent = Intent(applicationContext, StopwatchService::class.java)
     private lateinit var service: StopwatchService
     private var isBound = false
-    private val seconds: MutableStateFlow<Long> = StopwatchService._seconds
-    private val milliseconds: MutableStateFlow<Long> = StopwatchService._milliseconds
+    private val seconds: MutableStateFlow<Long> = StopwatchService.seconds
+    private val milliseconds: MutableStateFlow<Long> = StopwatchService.milliseconds
 
     private val serviceConnection = object : ServiceConnection {
 

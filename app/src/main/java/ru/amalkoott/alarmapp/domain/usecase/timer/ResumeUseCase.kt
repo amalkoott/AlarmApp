@@ -1,12 +1,12 @@
-package ru.amalkoott.alarmapp.domain.usecase
+package ru.amalkoott.alarmapp.domain.usecase.timer
 
 import ru.amalkoott.alarmapp.domain.repository.TimerRepository
 import javax.inject.Inject
 
-class ResetTimerUseCase @Inject constructor(
+class ResumeUseCase @Inject constructor(
     private val repository: TimerRepository
-){
+) {
     fun expose(){
-        repository.finish()
+        repository.resume()
     }
 }

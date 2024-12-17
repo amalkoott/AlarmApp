@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import ru.amalkoott.alarmapp.data.service.TimerService
@@ -41,12 +43,10 @@ class TimerRepositoryImpl @Inject constructor(
     override fun start(point: Long): Flow<Long> {
         intent.putExtra(TIMER_START,point)
         applicationContext.bindService(intent,serviceConnection,Context.BIND_AUTO_CREATE)
-        applicationContext.startService(intent)
-
-
+        ContextCompat.startForegroundService(applicationContext,intent)
+        //applicationContext.startService(intent)
 
         return TimerService.current
-        TODO ("change to foreground service")
     }
 
     override fun pause() {
@@ -65,5 +65,11 @@ class TimerRepositoryImpl @Inject constructor(
     override fun finish() {
         applicationContext.unbindService(serviceConnection)
         Toast.makeText(applicationContext,"FINISH!!!",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun add(value: Long) {
+        if(isBound){
+            service.addTime(value)
+        }
     }
 }

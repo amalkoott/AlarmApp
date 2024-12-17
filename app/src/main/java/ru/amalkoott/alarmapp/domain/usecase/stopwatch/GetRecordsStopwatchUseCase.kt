@@ -1,4 +1,4 @@
-package ru.amalkoott.alarmapp.domain.usecase
+package ru.amalkoott.alarmapp.domain.usecase.stopwatch
 
 import kotlinx.coroutines.flow.Flow
 import ru.amalkoott.alarmapp.domain.model.StopwatchRecord

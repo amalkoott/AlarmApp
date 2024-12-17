@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.amalkoott.alarmapp.domain.model.StopwatchRecord
 import ru.amalkoott.alarmapp.domain.model.ChronoTime
-import ru.amalkoott.alarmapp.domain.usecase.GetRecordsStopwatchUseCase
-import ru.amalkoott.alarmapp.domain.usecase.MarkRecordStopwatchUseCase
-import ru.amalkoott.alarmapp.domain.usecase.ResetStopwatchUseCase
-import ru.amalkoott.alarmapp.domain.usecase.StartStopwatchUseCase
-import ru.amalkoott.alarmapp.domain.usecase.StopStopwatchUseCase
+import ru.amalkoott.alarmapp.domain.usecase.stopwatch.GetRecordsStopwatchUseCase
+import ru.amalkoott.alarmapp.domain.usecase.stopwatch.MarkRecordStopwatchUseCase
+import ru.amalkoott.alarmapp.domain.usecase.stopwatch.ResetStopwatchUseCase
+import ru.amalkoott.alarmapp.domain.usecase.stopwatch.StartStopwatchUseCase
+import ru.amalkoott.alarmapp.domain.usecase.stopwatch.StopStopwatchUseCase
 import javax.inject.Inject
 
 @HiltViewModel
