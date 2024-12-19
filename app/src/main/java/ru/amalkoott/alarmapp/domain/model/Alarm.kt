@@ -5,11 +5,17 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Alarm(
-    @PrimaryKey
-    val id: Long,
-    val name: String
+    var description: String?,
+    var time: Int,
+    var isActive: Boolean = false,
+
 ){
+    @PrimaryKey(autoGenerate = true)
+    var id: Long? = null
+
     companion object{
-        val EMPTY_ALARM = Alarm(0L,"empty_alarm")
+        val EMPTY_ALARM = Alarm("empty_alarm", 0)
     }
+
+
 }

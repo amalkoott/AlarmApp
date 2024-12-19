@@ -1,6 +1,8 @@
 package ru.amalkoott.alarmapp.domain
 
 interface ForegroundService {
+    val serviceCompanion: ForegroundCompanion
+    /*
     companion object : ForegroundCompanion {
         override val CHANNEL_ID: String
             get() = "CHANNEL_ID"
@@ -9,4 +11,5 @@ interface ForegroundService {
         override val NOTIFICATION_ID: Int
             get() = 0
     }
+    */
 }

@@ -8,12 +8,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.amalkoott.alarmapp.data.AppDatabase
-import ru.amalkoott.alarmapp.data.Dao
-import ru.amalkoott.alarmapp.data.service.TimerService
-import ru.amalkoott.alarmapp.data.supplier.StopwatchSupplierImpl
-import ru.amalkoott.alarmapp.domain.supplier.StopwatchSupplier
+import ru.amalkoott.alarmapp.data.AppDao
 import javax.inject.Singleton
-import kotlin.contracts.contract
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,7 +28,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDao(db: AppDatabase): Dao {
+    fun provideAppDao(db: AppDatabase): AppDao {
         return db.getDao()
     }
     /*

@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">AlarmApp</string>
+
+    <string name="stopwatch_channel_id">STOPWATCH_CHANNEL_ID</string>
+    <string name="stopwatch_channel_name">STOPWATCH_CHANNEL_NAME</string>
+    <string name="stopwatch_channel_description">STOPWATCH_CHANNEL_DESCRIPTION</string>
+    <string name="stopwatch_notification_id">STOPWATCH_NOTIFICATION_ID</string>
+    <string name="stopwatch_notification_title">STOPWATCH_NOTIFICATION_TITLE</string>
+    <string name="stopwatch_notification_details">STOPWATCH_NOTIFICATION_DETAILS</string>
+
+
+    <string name="timer_channel_id">TIMER_CHANNEL_ID</string>
+    <string name="timer_channel_name">TIMER_CHANNEL_NAME</string>
+    <string name="timer_channel_description">TIMER_CHANNEL_DESCRIPTION</string>
+    <string name="timer_notification_id">TIMER_NOTIFICATION_ID</string>
+    <string name="timer_notification_title">TIMER_NOTIFICATION_TITLE</string>
+    <string name="timer_notification_details">TIMER_NOTIFICATION_DETAILS</string>
+    <string name="timer_task_finished">Timer finished</string>
 </resources>

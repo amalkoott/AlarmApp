@@ -11,6 +11,7 @@ import android.os.IBinder
 import androidx.core.app.ServiceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.amalkoott.alarmapp.R
 import ru.amalkoott.alarmapp.domain.ForegroundCompanion
 import ru.amalkoott.alarmapp.domain.ForegroundService
 import ru.amalkoott.alarmapp.utils.ForegroundServiceTools
@@ -24,18 +25,19 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class StopwatchService : Service(), ForegroundService {
-    companion object : ForegroundCompanion{
+    override val serviceCompanion = object : ForegroundCompanion{
+        override val CHANNEL_ID get() = getString(R.string.stopwatch_channel_id)
+        override val CHANNEL_NAME get() = getString(R.string.stopwatch_channel_name)
+        override val CHANNEL_DESCRIPTION get() = getString(R.string.stopwatch_channel_description)
+        override val NOTIFICATION_ID get() = 1//todo getInt(R.string.timer_notification_id)
+        override val NOTIFICATION_TITLE get() = getString(R.string.stopwatch_notification_title)
+        override val NOTIFICATION_DETAILS get() = getString(R.string.stopwatch_notification_details)
+        override val NOTIFICATION_ICON get() = 1//todo getInt(R.string.timer_notification_icon)
+    }
+
+    companion object {
         val seconds = MutableStateFlow(0L)
         val milliseconds = MutableStateFlow(0L)
-
-        override val CHANNEL_ID: String
-            get() = "STOPWATCH_CHANNEL"
-
-        override val CHANNEL_NAME: String
-            get() = "STOPWATCH"
-
-        override val NOTIFICATION_ID: Int
-            get() = 1
     }
 
     private val notificationManager by lazy {
@@ -53,7 +55,7 @@ class StopwatchService : Service(), ForegroundService {
 
     override fun onCreate() {
         super.onCreate()
-        notificationManager.createNotificationChannel(Companion)
+        notificationManager.createNotificationChannel(serviceCompanion)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -70,9 +72,9 @@ class StopwatchService : Service(), ForegroundService {
             updateTime(seconds)
         }
 
-        val notification = ForegroundServiceTools.getNotification(Companion, applicationContext, seconds.value)
+        val notification = ForegroundServiceTools.getNotification(serviceCompanion, applicationContext, seconds.value)
 
-        ServiceCompat.startForeground(this, NOTIFICATION_ID, notification,
+        ServiceCompat.startForeground(this, serviceCompanion.NOTIFICATION_ID, notification,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {
@@ -103,7 +105,7 @@ class StopwatchService : Service(), ForegroundService {
     }
 
     private fun updateTime(seconds: Long) {
-        notificationManager.notify(Companion,this,seconds)
+        notificationManager.notify(serviceCompanion,this,seconds)
     }
 
     override fun stopService(name: Intent?): Boolean {
@@ -115,7 +117,7 @@ class StopwatchService : Service(), ForegroundService {
     }
 
     override fun onDestroy() {
-        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager.cancel(serviceCompanion.NOTIFICATION_ID)
         stopStopwatch()
         resetStopwatch()
 
@@ -135,4 +137,6 @@ class StopwatchService : Service(), ForegroundService {
             updateTime(seconds)
         }
     }
+
+
 }

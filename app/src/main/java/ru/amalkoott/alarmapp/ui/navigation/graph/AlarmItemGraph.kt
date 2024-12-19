@@ -1,34 +1,40 @@
 package ru.amalkoott.alarmapp.ui.navigation.graph
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TimePickerState
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
-import androidx.navigation.compose.navigation
-import ru.amalkoott.alarmapp.ui.navigation.route.AppRoute
+import androidx.navigation.compose.rememberNavController
 import ru.amalkoott.alarmapp.ui.navigation.route.AlarmItemRoute
-import ru.amalkoott.alarmapp.ui.screen.AlarmItem
+import ru.amalkoott.alarmapp.ui.navigation.route.AppRoute
+import ru.amalkoott.alarmapp.ui.screen.AlarmItemScreen
 import ru.amalkoott.alarmapp.ui.screen.DatePickerScreen
 import ru.amalkoott.alarmapp.ui.screen.MelodyPickerScreen
 import ru.amalkoott.alarmapp.ui.screen.TimePickerScreen
+import ru.amalkoott.alarmapp.ui.view.CreateAlarmViewModel
 
-fun NavGraphBuilder.alarmItemNavGraph(navController: NavController){
-    navigation(
-        route = AppRoute.Item.route,
-        startDestination = AlarmItemRoute.Main.name,
-        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(350)) },
-        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(350)) },
-        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(350)) },
-        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(350))}
+@Composable
+fun AlarmItemNavGraph(){
+    val navController = rememberNavController()
+    val viewModel: CreateAlarmViewModel = hiltViewModel()
 
-    ) {
+    val onTimeConfirm: (Int,Int) -> Unit = { hour, minute -> viewModel.onTimeConfirm(hour,minute) }
+    val onTimeDismiss: () -> Unit = { viewModel.onTimeDismiss() }
+
+    val onSaveClick: () -> Unit = { viewModel.add() }
+
+    NavHost(navController = navController, startDestination = AlarmItemRoute.Main.name){
         composable(route = AlarmItemRoute.Main.name){
-            AlarmItem(navController)
+            AlarmItemScreen(navController, onSaveClick)
         }
         dialog(route = AlarmItemRoute.Time.name){
-            TimePickerScreen()
+            TimePickerScreen(
+                onConfirm = onTimeConfirm,
+                onDismiss = onTimeDismiss
+            )
         }
         dialog(route = AlarmItemRoute.Date.name){
             DatePickerScreen()

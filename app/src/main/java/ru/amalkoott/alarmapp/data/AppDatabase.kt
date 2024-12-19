@@ -7,12 +7,12 @@ import ru.amalkoott.alarmapp.domain.model.Alarm
 
 @Database(
     entities = [Alarm::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
 //@TypeConverters(AdvertsListConverter::class, DateConverter::class)
 abstract class AppDatabase : RoomDatabase(){
-    abstract fun getDao(): Dao
+    abstract fun getDao(): AppDao
 
 }

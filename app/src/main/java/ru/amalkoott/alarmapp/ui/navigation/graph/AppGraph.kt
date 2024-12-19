@@ -21,6 +21,10 @@ fun AppNavGraph(navController: NavHostController){
         composable(route = AppRoute.Timer.name){
             TimerScreen()
         }
-        alarmItemNavGraph(navController)
+        composable(route = AppRoute.Item.name){
+            AlarmItemNavGraph()
+        //AlarmItemGraph(navController)
+        }
+        //alarmItemNavGraph(navController)
     }
 }

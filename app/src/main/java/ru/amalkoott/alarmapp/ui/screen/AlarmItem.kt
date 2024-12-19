@@ -1,6 +1,5 @@
 package ru.amalkoott.alarmapp.ui.screen
 
-import android.util.Log
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,21 +11,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import ru.amalkoott.alarmapp.ui.navigation.route.AlarmItemRoute
-import ru.amalkoott.alarmapp.ui.view.CreateAlarmViewModel
+
 
 @Composable
-fun AlarmItem(
-    navController: NavController,
-    viewModel: CreateAlarmViewModel = hiltViewModel(),
-){
+fun AlarmItemScreen(navController: NavHostController, onSaveClick: () -> Unit){
     val pickers = listOf(
         AlarmItemRoute.Time,
         AlarmItemRoute.Date,
         AlarmItemRoute.Melody
     )
+
     Box(
         Modifier.padding(horizontal = 16.dp).fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -39,17 +35,16 @@ fun AlarmItem(
                     Text(text = it.name)
                 }
             }
-            val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
+            val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
             Button(
                 onClick = {
                     backDispatcher?.onBackPressed()
-                    viewModel.add()
+                    onSaveClick()
                 }
             ) {
                 Text(text = "SAVE")
             }
         }
     }
-
 }

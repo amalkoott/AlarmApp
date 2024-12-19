@@ -1,5 +1,6 @@
 package ru.amalkoott.alarmapp.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,8 +13,8 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerScreen(
-   // onConfirm: () -> Unit,
-   // onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit,
+    onDismiss: () -> Unit,
 ){
     Text("TIME PICKER")
     val currentTime = Calendar.getInstance()
@@ -26,13 +27,19 @@ fun TimePickerScreen(
 
     Column {
         TimePicker(
-            state = timePickerState,
+            state = timePickerState
         )
-        Button(onClick = {  }) {
-            Text("Dismiss picker")
-        }
-        Button(onClick = {  }) {
+        Button(onClick = {
+            Log.d("ALARM",timePickerState.toString())
+            onConfirm(timePickerState.hour, timePickerState.minute)
+        }) {
             Text("Confirm selection")
         }
+        Button(onClick = {
+            onDismiss()
+        }) {
+            Text("Dismiss picker")
+        }
+
     }
 }

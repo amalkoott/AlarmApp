@@ -15,12 +15,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import ru.amalkoott.alarmapp.R
 import ru.amalkoott.alarmapp.domain.ForegroundCompanion
+import ru.amalkoott.alarmapp.domain.ForegroundService
 import ru.amalkoott.alarmapp.utils.ForegroundServiceTools
 import ru.amalkoott.alarmapp.utils.ForegroundServiceTools.createNotificationChannel
 import ru.amalkoott.alarmapp.utils.ForegroundServiceTools.notify
 
-class TimerService: Service() {
+class TimerService: Service(), ForegroundService {
     private val handler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
     private var point = 0L
@@ -40,17 +42,19 @@ class TimerService: Service() {
         }
     }
 
-    companion object : ForegroundCompanion {
+    override val serviceCompanion = object : ForegroundCompanion{
+        override val CHANNEL_ID get() = getString(R.string.timer_channel_id)
+        override val CHANNEL_NAME get() = getString(R.string.timer_channel_name)
+        override val CHANNEL_DESCRIPTION get() = getString(R.string.timer_channel_description)
+        override val NOTIFICATION_ID get() = 1//todo getInt(R.string.timer_notification_id)
+        override val NOTIFICATION_TITLE get() = getString(R.string.timer_notification_title)
+        override val NOTIFICATION_DETAILS get() = getString(R.string.timer_notification_details)
+        override val NOTIFICATION_ICON get() = 1//todo getInt(R.string.timer_notification_icon)
+    }
+
+    companion object {
         const val TIMER_START = "POINT"
-
         var current = MutableStateFlow<Long>(0)
-
-        override val CHANNEL_ID: String
-            get() = "TIMER_CHANNEL_ID"
-        override val CHANNEL_NAME: String
-            get() = "TIMER_CHANNEL"
-        override val NOTIFICATION_ID: Int
-            get() = 1
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -63,14 +67,14 @@ class TimerService: Service() {
 
     override fun onCreate() {
         super.onCreate()
-        notificationManager.createNotificationChannel(Companion)
+        notificationManager.createNotificationChannel(serviceCompanion)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val extra = intent?.extras
         point = extra?.getLong(TIMER_START) ?: 0L
 
-        startForegroundService()//startTimer()
+        startForegroundService()
         return START_STICKY
     }
     private fun startForegroundService() {
@@ -79,8 +83,8 @@ class TimerService: Service() {
         }
 
 
-        val notification = ForegroundServiceTools.getNotification(Companion, applicationContext, current.value)
-        ServiceCompat.startForeground(this, NOTIFICATION_ID, notification,
+        val notification = ForegroundServiceTools.getNotification(serviceCompanion, applicationContext, current.value)
+        ServiceCompat.startForeground(this, serviceCompanion.NOTIFICATION_ID, notification,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {
@@ -89,7 +93,7 @@ class TimerService: Service() {
         )
     }
     private fun update(value: Any){
-        notificationManager.notify(Companion,this, value)
+        notificationManager.notify(serviceCompanion,this, value)
     }
 
     private fun startTimer(onTick: (current: String) -> Unit){
@@ -101,11 +105,11 @@ class TimerService: Service() {
                     onTick(current.value.toString())
                     handler.postDelayed(this, 1000)
                 }
-                else  callback?.onTaskCompleted("Task Finished")
+                else  callback?.onTaskCompleted(getString(R.string.timer_task_finished))
             }
         }
 
-        handler.postDelayed(timerRunnable!!, 0)  // Первая задержка 1 секунда
+        handler.postDelayed(timerRunnable!!, 0)
     }
 
     fun pauseTimer(){
