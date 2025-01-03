@@ -16,4 +16,6 @@
     <string name="timer_notification_title">TIMER_NOTIFICATION_TITLE</string>
     <string name="timer_notification_details">TIMER_NOTIFICATION_DETAILS</string>
     <string name="timer_task_finished">Timer finished</string>
+
+    <string name="alarms_label" translatable="false">Будильники</string>
 </resources>

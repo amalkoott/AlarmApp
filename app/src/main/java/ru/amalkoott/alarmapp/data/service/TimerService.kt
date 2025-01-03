@@ -54,6 +54,10 @@ class TimerService: Service(), ForegroundService {
 
     companion object {
         const val TIMER_START = "POINT"
+        const val TIMER_START_HOURS = "POINT_HOURS"
+        const val TIMER_START_MINUTES = "POINT_MINUTES"
+        const val TIMER_START_SECONDS = "POINT_SECONDS"
+
         var current = MutableStateFlow<Long>(0)
     }
 

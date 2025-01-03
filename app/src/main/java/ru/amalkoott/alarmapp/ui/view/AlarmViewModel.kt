@@ -2,26 +2,24 @@ package ru.amalkoott.alarmapp.ui.view
 
 import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.amalkoott.alarmapp.domain.model.Alarm
 import ru.amalkoott.alarmapp.domain.usecase.alarm.GetAlarmsUseCase
+import ru.amalkoott.alarmapp.domain.usecase.alarm.SwitchAlarmUseCase
 import ru.amalkoott.alarmapp.domain.usecase.alarm.UpdateAlarmUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
     private val getAlarmsUseCase: GetAlarmsUseCase,
-    private val updateAlarmUseCase: UpdateAlarmUseCase
+    private val updateAlarmUseCase: UpdateAlarmUseCase,
+    private val switchAlarmUseCase: SwitchAlarmUseCase
 ) : ViewModel() {
 
     private val _alrms = MutableStateFlow<List<State<Alarm>>>(emptyList())
@@ -57,19 +55,16 @@ class AlarmViewModel @Inject constructor(
     fun onDeselectClick(){
         selectedAlarm.value = null
     }
-    fun onActiveChange(alarm: State<Alarm>){
+    fun onSwitchAlarm(alarm: State<Alarm>){
+        val updatedAlarm = alarm.value
+
+        //if (selectedAlarm.value !== alarm.value) selectedAlarm.value = null
 
         viewModelScope.launch {
-            alarm.value.isActive = !alarm.value.isActive
-            updateAlarmUseCase.expose(alarm.value)
+            //selectedAlarm.value = updatedAlarm
+            updatedAlarm.isActive = !updatedAlarm.isActive
+            updateAlarmUseCase.expose(updatedAlarm)
+            switchAlarmUseCase.expose(updatedAlarm)
         }
-    }
-    fun onActiveChange(){
-
-    }
-    fun onAddClick(){
-    }
-    fun onSaveClick(){
-        selectedAlarm.value = null
     }
 }

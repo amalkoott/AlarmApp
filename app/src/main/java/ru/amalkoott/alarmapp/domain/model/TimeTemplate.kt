@@ -1,5 +1,7 @@
 package ru.amalkoott.alarmapp.domain.model
 
+import android.util.Log
+
 class TimeTemplate(
     private var _hours: Long = 0,
     private var _minutes: Long = 0,
@@ -23,7 +25,20 @@ class TimeTemplate(
 
             return TimeTemplate(_hours = hours, _minutes = minutes, _seconds = seconds, _milliseconds = milliseconds)
         }
+        fun fromSeconds(value: Long) : TimeTemplate{
+            val hours = value / 3600
+            val minutes = (value / 60) - 60
+            val seconds = (value - (3600 * hours) - (minutes * 60))
+
+            return TimeTemplate(_hours = hours, _minutes = minutes, _seconds = seconds).let {
+                if (it.isBigThanZero()) it else TimeTemplate()
+            }
+        }
     }
+    fun isBigThanZero():Boolean{
+        return if (this.hours < 0 || this.minutes < 0 || this.seconds < 0) false else true
+    }
+
 
     fun inMilliseconds(): Long{
         val value = 1000 * (this.hours * 60 * 60 + this.minutes * 60 + this.seconds) + this.milliseconds

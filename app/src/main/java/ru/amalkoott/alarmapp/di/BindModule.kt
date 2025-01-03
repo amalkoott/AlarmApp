@@ -4,11 +4,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.amalkoott.alarmapp.data.repository.AlarmManagerRepositoryImpl
 import ru.amalkoott.alarmapp.data.repository.AlarmRepositoryImpl
 import ru.amalkoott.alarmapp.data.repository.AppRepositoryImpl
 import ru.amalkoott.alarmapp.data.repository.StopwatchRepositoryImpl
 import ru.amalkoott.alarmapp.data.repository.TimerRepositoryImpl
 import ru.amalkoott.alarmapp.data.supplier.StopwatchSupplierImpl
+import ru.amalkoott.alarmapp.domain.repository.AlarmManagerRepository
 import ru.amalkoott.alarmapp.domain.repository.AlarmRepository
 import ru.amalkoott.alarmapp.domain.repository.AppRepository
 import ru.amalkoott.alarmapp.domain.repository.StopwatchRepository
@@ -40,6 +42,10 @@ interface BindModule {
     @Singleton
     @Binds
     fun bindAlarmRepository(repo: AlarmRepositoryImpl) : AlarmRepository
+
+    @Singleton
+    @Binds
+    fun bindAlarmManagerRepository(repo: AlarmManagerRepositoryImpl) : AlarmManagerRepository
     /*
     @Singleton
     @Binds

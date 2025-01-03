@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:name=".di.App"
         android:allowBackup="true"
@@ -38,16 +40,12 @@
             android:foregroundServiceType="dataSync|mediaPlayback"
             android:exported="false">
         </service>
-        <!--
+
         <receiver
-            android:name=".data.broadcast.StopwatchBroadcast"
-            android:exported="true">
-            <intent-filter>
-                <action
-                    android:name = "android.provider.Time.STOPWATCH_INC" />
-            </ intent-filter >
+            android:name=".data.receiver.AlarmReceiver"
+            android:exported="false">
         </receiver>
-        -->
+
     </application>
 
 </manifest>

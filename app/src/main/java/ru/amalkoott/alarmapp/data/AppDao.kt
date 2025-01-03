@@ -21,4 +21,10 @@ interface AppDao {
 
     @Update
     fun update(alarm: Alarm): Int
+
+    @Query("DELETE FROM Alarm WHERE id = :id")
+    fun delete(id: Long)
+
+    @Query("SELECT * FROM Alarm WHERE id = :id")
+    fun byId(id: Long): Alarm
 }

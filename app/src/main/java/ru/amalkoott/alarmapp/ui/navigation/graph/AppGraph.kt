@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import ru.amalkoott.alarmapp.ui.navigation.route.AppRoute
 import ru.amalkoott.alarmapp.ui.screen.AlarmScreen
 import ru.amalkoott.alarmapp.ui.screen.StopwatchScreen
-import ru.amalkoott.alarmapp.ui.screen.TimerScreen
+import ru.amalkoott.alarmapp.ui.view.timer.TimerScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController){

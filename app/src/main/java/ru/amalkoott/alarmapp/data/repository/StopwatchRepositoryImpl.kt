@@ -20,7 +20,7 @@ class StopwatchRepositoryImpl @Inject constructor(
     override fun start(): ChronoTime{
         if (chronoTime == null){
             val time = stopwatchSupplier.supply()
-            chronoTime = ChronoTime(time.first,time.second)
+            chronoTime = ChronoTime(seconds = time.first, milliseconds = time.second)
             Log.d("SUPPLIER","repository start()")
 
         } else {

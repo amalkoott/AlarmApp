@@ -1,5 +1,6 @@
 package ru.amalkoott.alarmapp.di
 
+import android.app.AlarmManager
 import android.content.Context
 import androidx.room.Room
 import dagger.Module
@@ -30,6 +31,18 @@ object AppModule {
     @Provides
     fun provideAppDao(db: AppDatabase): AppDao {
         return db.getDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmManager(@ApplicationContext context: Context): AlarmManager{
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Singleton
+    @Provides
+    fun provideContext(@ApplicationContext context: Context): Context{
+        return context
     }
     /*
     @Singleton

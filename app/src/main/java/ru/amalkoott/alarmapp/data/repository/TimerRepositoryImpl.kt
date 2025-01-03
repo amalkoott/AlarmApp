@@ -10,8 +10,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.amalkoott.alarmapp.data.service.TimerService
 import ru.amalkoott.alarmapp.data.service.TimerService.Companion.TIMER_START
+import ru.amalkoott.alarmapp.domain.model.TimeTemplate
 import ru.amalkoott.alarmapp.domain.repository.TimerRepository
 import javax.inject.Inject
 
@@ -48,6 +50,18 @@ class TimerRepositoryImpl @Inject constructor(
 
         return TimerService.current
     }
+
+    /*
+    override fun start(point: TimeTemplate): Flow<TimeTemplate> {
+        val start = point.hours + point.minutes * 60 + point.seconds * 60 * 60
+        intent.putExtra(TIMER_START,start)
+        applicationContext.bindService(intent,serviceConnection,Context.BIND_AUTO_CREATE)
+        ContextCompat.startForegroundService(applicationContext,intent)
+        //applicationContext.startService(intent)
+
+        return TimerService.current
+    }
+    */
 
     override fun pause() {
         if(isBound){

@@ -22,11 +22,11 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun update(alarm: Alarm): Unit = withContext(Dispatchers.IO) {
-        dao.update(alarm)
+        Log.d("",dao.update(alarm).toString())
     }
 
-    override suspend fun delete(alarm: Alarm) {
-        TODO("Not yet implemented")
+    override suspend fun delete(id: Long) {
+        dao.delete(id)
     }
 
     override suspend fun clearAll() = withContext(Dispatchers.IO) {
@@ -34,7 +34,6 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getById(id: Long): Alarm {
-        TODO("Not yet implemented")
+        return dao.byId(id)
     }
-
 }
